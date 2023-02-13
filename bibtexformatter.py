@@ -24,7 +24,7 @@ def parse(bibfile):
 
 def cleanup(database, outfile):
    """
-   Clean up the bibtexparser database and e export file.
+   Clean up the bibtexparser database and export file.
    """
    for i, entry in enumerate(database.entries):
       # database.entries[i] = clean_authors(entry)
@@ -37,10 +37,10 @@ def cleanup(database, outfile):
    with open(outfile, 'w') as file:
       bibtexparser.dump(database, file)
 
-# def clean_authors(entry):
-#    if 'author' not in entry.keys():
-#       print(entry)
-#       raise KeyError(f"The entry {entry['ID']} does not contain 'author'!")
+def clean_authors(entry):
+   if 'author' not in entry.keys():
+      print(entry)
+      raise KeyError(f"The entry {entry['ID']} does not contain 'author'!")
 #    clean_entry = entry
 #    # messed up by `homogenize_latex_encoding`
 #    clean_entry['author'] = entry['author'].replace(r"{\~A}\textcopyright ", r"{\'e}")
@@ -54,29 +54,35 @@ def clean_journal_abbreviations(entry):
       raise KeyError(f"The entry {entry['ID']} does not contain 'journal'!")
 
    clean_entry = entry
-   clean_entry['journal'] = entry['journal'].replace("physics ", "Phys. ")
-   clean_entry['journal'] = entry['journal'].replace("physical ", "Phys. ")
-   clean_entry['journal'] = entry['journal'].replace("Physical ", "Phys. ")
-   clean_entry['journal'] = entry['journal'].replace("journal ", "J. ")
-   clean_entry['journal'] = entry['journal'].replace("Journal ", "J. ")
+   clean_entry['journal'] = entry['journal'].replace("physics", "Phys.")
+   clean_entry['journal'] = entry['journal'].replace("Physics", "Phys.")
+   clean_entry['journal'] = entry['journal'].replace("physical", "Phys.")
+   clean_entry['journal'] = entry['journal'].replace("Physical", "Phys.")
+   clean_entry['journal'] = entry['journal'].replace("journal of", "J.")
+   clean_entry['journal'] = entry['journal'].replace("Journal of", "J.")
    clean_entry['journal'] = entry['journal'].replace("computation ", "Comput. ")
    clean_entry['journal'] = entry['journal'].replace("computer ", "Comput. ")
    clean_entry['journal'] = entry['journal'].replace("Computation ", "Comput. ")
    clean_entry['journal'] = entry['journal'].replace("Computer ", "Comput. ")
    clean_entry['journal'] = entry['journal'].replace("technology", "Tech.")
    clean_entry['journal'] = entry['journal'].replace("Technology", "Tech.")
-   clean_entry['journal'] = entry['journal'].replace("nature ", "Nat. ")
-   clean_entry['journal'] = entry['journal'].replace("Nature ", "Nat. ")
-   clean_entry['journal'] = entry['journal'].replace("communication ", "Comm. ")
-   clean_entry['journal'] = entry['journal'].replace("Communication ", "Comm. ")
-   clean_entry['journal'] = entry['journal'].replace("review ", "Rev. ")
-   clean_entry['journal'] = entry['journal'].replace("Review ", "Rev. ")
+   clean_entry['journal'] = entry['journal'].replace("nature", "Nat.")
+   clean_entry['journal'] = entry['journal'].replace("Nature", "Nat.")
+   clean_entry['journal'] = entry['journal'].replace("communication", "Comm.")
+   clean_entry['journal'] = entry['journal'].replace("Communication", "Comm.")
+   clean_entry['journal'] = entry['journal'].replace("review", "Rev.")
+   clean_entry['journal'] = entry['journal'].replace("Review", "Rev.")
+   clean_entry['journal'] = entry['journal'].replace("reviews", "Rev.")
+   clean_entry['journal'] = entry['journal'].replace("Reviews", "Rev.")
+   clean_entry['journal'] = entry['journal'].replace("applied", "Appl.")
+   clean_entry['journal'] = entry['journal'].replace("Applied", "Appl.")
+   clean_entry['journal'] = entry['journal'].replace("Letters", "Lett.")
    return clean_entry
 
-# def clean_title(entry):
-#    if 'title' not in entry.keys():
-#       raise KeyError(f"The entry {entry['ID']} does not contain 'title'!")
-#    clean_entry = entry
+def clean_title(entry):
+   if 'title' not in entry.keys():
+      raise KeyError(f"The entry {entry['ID']} does not contain 'title'!")
+   clean_entry = entry
 
 #    # things that is wrongly modified by `homogenize_latex_encoding`
 #    clean_entry['title'] = entry['title'].replace("{I}II", "{III}")
