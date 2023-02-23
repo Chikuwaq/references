@@ -1,3 +1,5 @@
+#!.venv/Scripts/python
+
 import bibtexparser
 from bibtexparser.bparser import BibTexParser
 from bibtexparser.customization import homogenize_latex_encoding
@@ -27,24 +29,28 @@ def cleanup(database, outfile):
    Clean up the bibtexparser database and export file.
    """
    for i, entry in enumerate(database.entries):
-      # database.entries[i] = clean_authors(entry)
-      database.entries[i] = clean_journal_abbreviations(entry)
-      # database.entries[i] = clean_title(entry)
-      # database.entries[i] = clean_publisher(entry)
-      # database.entries[i] = clean_type(entry)
-      # database.entries[i] = clean_school(entry)
+      entry = clean_authors(entry)
+      entry = clean_journal_abbreviations(entry)
+      # entry = clean_title(entry)
+      # entry = clean_publisher(entry)
+      # entry = clean_type(entry)
+      # entry = clean_school(entry)
+      entry = delete_month(entry)
+      database.entries[i] = entry
 
    with open(outfile, 'w') as file:
       bibtexparser.dump(database, file)
 
+
+
+
+##### clean up methods #########################################
 def clean_authors(entry):
+   """ Check if authors are present in the entry """
    if 'author' not in entry.keys():
       print(entry)
       raise KeyError(f"The entry {entry['ID']} does not contain 'author'!")
-#    clean_entry = entry
-#    # messed up by `homogenize_latex_encoding`
-#    clean_entry['author'] = entry['author'].replace(r"{\~A}\textcopyright ", r"{\'e}")
-#    return clean_entry
+   return entry
 
 def clean_journal_abbreviations(entry):
    if entry['ENTRYTYPE'] in ['phdthesis', 'book', 'inbook']: 
@@ -79,10 +85,10 @@ def clean_journal_abbreviations(entry):
    clean_entry['journal'] = entry['journal'].replace("Letters", "Lett.")
    return clean_entry
 
-def clean_title(entry):
-   if 'title' not in entry.keys():
-      raise KeyError(f"The entry {entry['ID']} does not contain 'title'!")
-   clean_entry = entry
+# def clean_title(entry):
+#    if 'title' not in entry.keys():
+#       raise KeyError(f"The entry {entry['ID']} does not contain 'title'!")
+#    clean_entry = entry
 
 #    # things that is wrongly modified by `homogenize_latex_encoding`
 #    clean_entry['title'] = entry['title'].replace("{I}II", "{III}")
@@ -125,3 +131,9 @@ def clean_title(entry):
 #    # messed up by `homogenize_latex_encoding`
 #    clean_entry['school'] = entry['school'].replace(r"M\textbackslash n\"chen", r"M{\"u}nchen")
 #    return clean_entry
+
+def delete_month(entry):
+   """ month is an useful info for personal reference, but contaminates the bibtex output (Christian did not like it) """
+   if 'month' in entry.keys(): entry.pop('month')
+   return entry
+   

@@ -1,10 +1,9 @@
-# NOTE: This script has to be run twice so that bibtexparser does not complain encoding
+# NOTE: This script has to be run twice if bibtexparser complains about encoding.
 
 import bibtexformatter
-import sys
 
-old_file = sys.argv[1]
-new_file = sys.argv[2]
+old_file = 'Refs_raw.bib'
+new_file = 'Refs.bib'
 
 db = bibtexformatter.parse(old_file)
 bibtexformatter.cleanup(db, new_file)
