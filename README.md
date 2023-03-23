@@ -1,5 +1,5 @@
 ## Benefits
-- Make the bib file portable. You can clone this repository when writing a conference abstract.
+- Make the bib file portable. You can clone this repository when writing a conference abstract and thesis/dissertation.
 - different styles in accordance with journal specifications
 
 ## Passive usage
@@ -20,7 +20,7 @@ python -m venv .venv
 and activate the virtual environment by sourcing the script `<venv>/bin/activate`.
 Then run the format script:
 ```sh
-python format.py Refs.bib <new filename>
+python format.py
 ```
 This tool features:
 1. consistently sorts the keys 'title', 'author', 'journal', ... for all entries
