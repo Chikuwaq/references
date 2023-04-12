@@ -3,6 +3,7 @@
 import bibtexparser
 from bibtexparser.bparser import BibTexParser
 from bibtexparser.customization import homogenize_latex_encoding
+import subprocess
 
 
 def parse(bibfile):
@@ -10,10 +11,10 @@ def parse(bibfile):
    Parse a BibTeX file and create bibtexparser database object.
    """
    # convert accents to LaTeX syntax to avoid encode error in bibtexparser
-   import subprocess
    import sys
-   subprocess.Popen(['pwsh', 'preprocess.ps1', bibfile], stdout=sys.stdout)
-
+   p = subprocess.Popen([get_available_powershell(), 'preprocess.ps1', bibfile], stdout=sys.stdout)
+   p.wait()
+   
    # parse
    with open(bibfile, 'r') as file:
       database = bibtexparser.load(file)  # simple parse
@@ -22,6 +23,27 @@ def parse(bibfile):
       # parser.customization = homogenize_latex_encoding
       # database = bibtexparser.load(file, parser=parser)
    return database
+
+
+def get_available_powershell():
+   """
+   Check if PowerShell (Windows native) or pwsh (cross-platform) is available on the system
+   """
+   try:
+      output = subprocess.check_output(["pwsh", "--version"])
+      if "PowerShell" in output.decode("utf-8"):
+         return "pwsh"
+      else:
+         print("pwsh found, but the name does not match the console output.")
+   except FileNotFoundError:
+      try:
+         output = subprocess.check_output(["powershell", "--version"])
+         if "PowerShell" in output.decode("utf-8"):
+            return "powershell"
+         else:
+            print("PowerShell found, but the name does not match the console output.")
+      except FileNotFoundError:
+         raise FileNotFoundError("Neither PowerShell nor pwsh found. Please check PATH and/or install PowerShell or pwsh.")
 
 
 def cleanup(database, outfile):

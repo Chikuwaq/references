@@ -17,7 +17,7 @@ It depends on `bibtexparser` module. We recommend to use it in a virtual Python 
 ```sh
 python -m venv .venv
 ```
-and activate the virtual environment by sourcing the script `<venv>/bin/activate`.
+and activate the virtual environment by sourcing the script `<venv>/Scripts/Activate.ps1`.
 Then run the format script:
 ```sh
 python format.py

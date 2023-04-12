@@ -8,8 +8,10 @@ $text = $text -replace "ü", '\"{u}'
 $text = $text -replace "ä", '\"{a}'
 $text = $text -replace "ö", '\"{o}'
 $text = $text -replace "č", '\v{c}'
+$text = $text -replace "ć", "\'{c}"
 $text = $text -replace "é", "\'{e}"
 $text = $text -replace "á", "\'{a}"
+$text = $text -replace "ß", "{\ss}"
 
 $text | Set-Content -Path $args[0]
 
