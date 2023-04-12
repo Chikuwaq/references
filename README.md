@@ -18,12 +18,17 @@ It depends on `bibtexparser` module. We recommend to use it in a virtual Python 
 python -m venv .venv
 ```
 and activate the virtual environment by sourcing the script `<venv>/Scripts/Activate.ps1`.
+If you use pip, install the dependencies as:
+```sh
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
 Then run the format script:
 ```sh
 python format.py
 ```
 This tool features:
-1. consistently sorts the keys 'title', 'author', 'journal', ... for all entries
-2. sort the entries in alphabetical order
-3. align indentation
-4. recognize accented letters and convert to the LaTeX-conform syntax
+1. Consistently sorts the keys 'title', 'author', 'journal', ... for all entries
+2. Sort the entries in alphabetical order
+3. Align indentation
+4. Recognize accented letters and convert to the LaTeX-conform syntax
