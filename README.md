@@ -3,16 +3,16 @@
 - different styles in accordance with journal specifications
 
 ## Passive usage
-If you just want to use the bib file,
-1. Clone this repository next to your .tex file
+If you just want to use the bib file (e.g. writing a conference abstract),
+1. Clone this repository next to your .tex file, or simply copy the content of 'Refs.bib' to a file
 2. Specify in the .tex file:
 ```latex
 \bibliographystyle{unsrt}           % sort the references as they appear in the text
 \bibliography{./references/Refs}
 ```
 
-## Python formatter
-You can format the bib file with the `format.py` script as you add references. 
+## Active usage: Python formatter
+You can format your own bib file with the `format.py` script. 
 It depends on `bibtexparser` module. We recommend to use it in a virtual Python environment:
 ```sh
 python -m venv .venv
