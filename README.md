@@ -32,3 +32,15 @@ This tool features:
 2. Sort the entries in alphabetical order
 3. Align indentation
 4. Recognize accented letters and convert to the LaTeX-conform syntax
+
+If the conversion fails with a UnicodeDecodeError, make sure that the Python default encoding is set to UTF-8. The setting can be displayed by the following script:
+```python
+import os
+import sys
+import locale
+print(os.environ.get("PYTHONIOENCODING"))
+print(sys.getdefaultencoding())
+print(sys.getfilesystemencoding())
+print(sys.stdout.encoding)
+print(locale.getpreferredencoding())
+```
