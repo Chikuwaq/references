@@ -75,7 +75,7 @@ def clean_authors(entry):
    return entry
 
 def clean_journal_abbreviations(entry):
-   if entry['ENTRYTYPE'] in ['phdthesis', 'book', 'inbook', 'misc']: 
+   if entry['ENTRYTYPE'] in ['phdthesis', 'book', 'inbook', 'inproceedings', 'misc']: 
       return entry
    if ('journal' not in entry.keys()) and ('Journal' not in entry.keys()):
       print(entry)
