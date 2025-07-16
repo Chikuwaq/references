@@ -58,6 +58,10 @@ def cleanup(database, outfile):
       # entry = clean_type(entry)
       # entry = clean_school(entry)
       entry = delete_month(entry)
+      if "eprint" in entry:
+         entry.pop("eprint")
+      if "abstract" in entry:
+         entry.pop("abstract")
       database.entries[i] = entry
 
    with open(outfile, 'w') as file:
