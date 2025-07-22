@@ -44,3 +44,12 @@ print(sys.getfilesystemencoding())
 print(sys.stdout.encoding)
 print(locale.getpreferredencoding())
 ```
+
+## Examples where manual adjustment is needed
+1. If an auther's first name is abbreviated as `M.L.`, this will not be recognized as a name with two first name initials. Use the regex
+```
+(?<=\.)\w(?=\.)
+```
+in VS Code to find such cases and amend it to `M. L.`.
+
+2. 
