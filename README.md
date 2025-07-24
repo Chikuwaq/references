@@ -52,4 +52,6 @@ print(locale.getpreferredencoding())
 ```
 in VS Code to find such cases and amend it to `M. L.`.
 
-2. 
+2. Abbreviation of journal names
+Journal --> J.
+Japanese --> Jpn.
