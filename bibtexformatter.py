@@ -57,6 +57,7 @@ def cleanup(database, outfile):
       # entry = clean_publisher(entry)
       # entry = clean_type(entry)
       # entry = clean_school(entry)
+      entry = clean_pages(entry)
       entry = delete_month(entry)
       if "eprint" in entry:
          entry.pop("eprint")
@@ -102,13 +103,21 @@ def clean_journal_abbreviations(entry):
    clean_entry['journal'] = entry['journal'].replace("Nature", "Nat.")
    clean_entry['journal'] = entry['journal'].replace("communication", "Comm.")
    clean_entry['journal'] = entry['journal'].replace("Communication", "Comm.")
+   clean_entry['journal'] = entry['journal'].replace("reviews", "Rev.")
+   clean_entry['journal'] = entry['journal'].replace("Reviews", "Rev.")
    clean_entry['journal'] = entry['journal'].replace("review", "Rev.")
    clean_entry['journal'] = entry['journal'].replace("Review", "Rev.")
-   clean_entry['journal'] = entry['journal'].replace("reviews", "Rev.")
    clean_entry['journal'] = entry['journal'].replace("Reviews", "Rev.")
    clean_entry['journal'] = entry['journal'].replace("applied", "Appl.")
    clean_entry['journal'] = entry['journal'].replace("Applied", "Appl.")
    clean_entry['journal'] = entry['journal'].replace("Letters", "Lett.")
+   return clean_entry
+
+def clean_pages(entry):
+   if 'pages' not in entry.keys():
+      return entry
+   clean_entry = entry
+   clean_entry['pages'] = entry['pages'].split('-')[0]  # remove end page number
    return clean_entry
 
 # def clean_title(entry):
