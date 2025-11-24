@@ -75,16 +75,19 @@ def cleanup(database, outfile):
 def clean_authors(entry):
    """ Check if authors are present in the entry """
    if 'author' not in entry.keys():
-      print(entry)
-      raise KeyError(f"The entry {entry['ID']} does not contain 'author'!")
+      raise KeyError(f"The entry {entry['ID']} must contain 'author'!")
    return entry
 
 def clean_journal_abbreviations(entry):
-   if entry['ENTRYTYPE'] in ['phdthesis', 'book', 'inbook', 'inproceedings', 'misc', 'unpublished']: 
+   if entry['ENTRYTYPE'] in ['phdthesis', 'book', 'inbook', 'inproceedings', 'unpublished']: 
       return entry
+   if entry['ENTRYTYPE'] == 'misc':
+      if 'howpublished' not in entry.keys():
+         raise KeyError(f"The entry {entry['ID']} must contain 'howpublished'!")
+      return entry
+
    if ('journal' not in entry.keys()) and ('Journal' not in entry.keys()):
-      print(entry)
-      raise KeyError(f"The entry {entry['ID']} does not contain 'journal'!")
+      raise KeyError(f"The entry {entry['ID']} must contain 'journal'!")
 
    clean_entry = entry
    clean_entry['journal'] = entry['journal'].replace("physics", "Phys.")
@@ -122,7 +125,7 @@ def clean_pages(entry):
 
 # def clean_title(entry):
 #    if 'title' not in entry.keys():
-#       raise KeyError(f"The entry {entry['ID']} does not contain 'title'!")
+#       raise KeyError(f"The entry {entry['ID']} must contain 'title'!")
 #    clean_entry = entry
 
 #    # things that is wrongly modified by `homogenize_latex_encoding`
