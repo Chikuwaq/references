@@ -53,6 +53,7 @@ def cleanup(database, outfile):
    for i, entry in enumerate(database.entries):
       entry = clean_authors(entry)
       entry = clean_journal_abbreviations(entry)
+      entry = clean_proceeding_abbreviations(entry)
       # entry = clean_title(entry)
       # entry = clean_publisher(entry)
       # entry = clean_type(entry)
@@ -116,6 +117,17 @@ def clean_journal_abbreviations(entry):
    clean_entry['journal'] = entry['journal'].replace("Letters", "Lett.")
    return clean_entry
 
+def clean_proceeding_abbreviations(entry):
+   if entry['ENTRYTYPE'] != 'inproceedings':
+      return entry
+   if 'organization' not in entry.keys():
+      return entry
+   
+   clean_entry = delete_publisher(entry)  # we do not want coexistence of 'publisher' and 'organization'
+   clean_entry['organization'] = entry['organization'].replace("International Society for Optics and Photonics", "SPIE")
+   return clean_entry
+
+
 def clean_pages(entry):
    if 'pages' not in entry.keys():
       return entry
@@ -175,3 +187,6 @@ def delete_month(entry):
    if 'month' in entry.keys(): entry.pop('month')
    return entry
    
+def delete_publisher(entry):
+   if 'publisher' in entry.keys(): entry.pop('publisher')
+   return entry
