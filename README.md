@@ -5,7 +5,12 @@
 ## Passive usage
 If you just want to use the bib file (e.g. writing a conference abstract),
 1. Clone this repository next to your .tex file, or simply copy the content of 'Refs.bib' to a file
-2. Specify in the .tex file:
+2. If not included, include the siunitx package for a proper and consistent rendering of the numbers and units. Add
+```latex
+\usepackage{siunitx}
+```
+in the preamble of your tex file.
+3. Specify in the .tex file:
 ```latex
 \bibliographystyle{unsrt}           % sort the references as they appear in the text
 \bibliography{./references/Refs}
