@@ -51,7 +51,7 @@ def cleanup(database, outfile):
    Clean up the bibtexparser database and export file.
    """
    for i, entry in enumerate(database.entries):
-      clean_doi_in_journal(entry)
+      clean_doi(entry)
       entry = clean_authors(entry)
       entry = clean_journal_abbreviations(entry)
       entry = clean_proceeding_abbreviations(entry)
@@ -74,18 +74,20 @@ def cleanup(database, outfile):
 
 
 ##### clean up methods #########################################
-def clean_doi_in_journal(entry):
-   if entry['ENTRYTYPE'] != 'article':
+def clean_doi(entry):
+   if entry['ENTRYTYPE'] not in ['article', 'inproceedings']:
       return
-   domain = 'https://doi.org/'
+   domain_candidates = ['https://doi.org/', 'https://dx.doi.org/', 'http://dx.doi.org/']
    if 'doi' in entry.keys():
-      entry['doi'] = entry['doi'].replace(domain, '')
+      for domain in domain_candidates:
+         entry['doi'] = entry['doi'].replace(domain, '')
       return
    if 'url' in entry.keys():
-      if domain in entry['url']:
-         entry['doi'] = entry['url'].replace(domain, '')
-   else:
-      raise KeyError(f"The article {entry['ID']} must contain 'url' and/or 'doi'!")
+      for domain in domain_candidates:
+         if domain in entry['url']:
+            entry['doi'] = entry['url'].replace(domain, '')
+            return
+   raise KeyError(f"Could not deduce 'doi' from 'url' for the {entry['ENTRYTYPE']} {entry['ID']}!")
       
 
 def clean_authors(entry):
