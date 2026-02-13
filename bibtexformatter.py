@@ -84,7 +84,6 @@ def clean_doi_in_journal(entry):
    if 'url' in entry.keys():
       if domain in entry['url']:
          entry['doi'] = entry['url'].replace(domain, '')
-         print(f"Added DOI to article {entry['ID']}.")
    else:
       raise KeyError(f"The article {entry['ID']} must contain 'url' and/or 'doi'!")
       
@@ -146,7 +145,11 @@ def clean_proceeding_abbreviations(entry):
 
 def clean_pages(entry):
    if 'pages' not in entry.keys():
-      return entry
+      if entry['ENTRYTYPE'] == 'article':
+         raise KeyError(f"The entry {entry['ID']} must contain 'pages'!")
+      else:
+         return entry
+      
    clean_entry = entry
    clean_entry['pages'] = entry['pages'].split('-')[0]  # remove end page number
    return clean_entry
