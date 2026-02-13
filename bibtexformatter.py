@@ -77,14 +77,15 @@ def cleanup(database, outfile):
 def expect_doi_in_journal(entry):
    if entry['ENTRYTYPE'] != 'article':
       return
-   if 'doi' not in entry.keys():
-      if 'url' in entry.keys():
-         domain = 'https://doi.org/'
-         if domain in entry['url']:
-            entry['doi'] = entry['url'].replace(domain, '')
-            print(f"Added DOI to article {entry['ID']}.")
-      else:
-         raise KeyError(f"The article {entry['ID']} must contain 'doi'!")
+   if 'doi' in entry.keys():
+      return
+   if 'url' in entry.keys():
+      domain = 'https://doi.org/'
+      if domain in entry['url']:
+         entry['doi'] = entry['url'].replace(domain, '')
+         print(f"Added DOI to article {entry['ID']}.")
+   else:
+      raise KeyError(f"The article {entry['ID']} must contain 'url' and/or 'doi'!")
       
 
 def clean_authors(entry):
