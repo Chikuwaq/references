@@ -51,7 +51,7 @@ def cleanup(database, outfile):
    Clean up the bibtexparser database and export file.
    """
    for i, entry in enumerate(database.entries):
-      expect_doi_in_journal(entry)
+      clean_doi_in_journal(entry)
       entry = clean_authors(entry)
       entry = clean_journal_abbreviations(entry)
       entry = clean_proceeding_abbreviations(entry)
@@ -74,13 +74,14 @@ def cleanup(database, outfile):
 
 
 ##### clean up methods #########################################
-def expect_doi_in_journal(entry):
+def clean_doi_in_journal(entry):
    if entry['ENTRYTYPE'] != 'article':
       return
+   domain = 'https://doi.org/'
    if 'doi' in entry.keys():
+      entry['doi'] = entry['doi'].replace(domain, '')
       return
    if 'url' in entry.keys():
-      domain = 'https://doi.org/'
       if domain in entry['url']:
          entry['doi'] = entry['url'].replace(domain, '')
          print(f"Added DOI to article {entry['ID']}.")
