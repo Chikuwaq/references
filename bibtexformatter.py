@@ -4,6 +4,7 @@ import bibtexparser
 from bibtexparser.bparser import BibTexParser
 from bibtexparser.customization import homogenize_latex_encoding
 import subprocess
+import re
 
 
 def parse(bibfile):
@@ -55,7 +56,7 @@ def cleanup(database, outfile):
       entry = clean_authors(entry)
       entry = clean_journal_abbreviations(entry)
       entry = clean_proceeding_abbreviations(entry)
-      # entry = clean_title(entry)
+      entry = clean_title(entry)
       # entry = clean_publisher(entry)
       # entry = clean_type(entry)
       # entry = clean_school(entry)
@@ -156,28 +157,39 @@ def clean_pages(entry):
    clean_entry['pages'] = entry['pages'].split('-')[0]  # remove end page number
    return clean_entry
 
-# def clean_title(entry):
-#    if 'title' not in entry.keys():
-#       raise KeyError(f"The entry {entry['ID']} must contain 'title'!")
-#    clean_entry = entry
+def clean_title(entry):
+   if 'title' not in entry.keys():
+      if entry['ENTRYTYPE'] in ['misc']:
+         return entry
+      else:
+         raise KeyError(f"The entry {entry['ID']} must contain 'title'!")
+   pattern = r'\s+(?=\\unit\{)'
+   if re.search(pattern, entry['title']):
+      message = "Using siunitx command as "
+      message += r'(whitespace)\unit' 
+      message += f" in the entry {entry['ID']} likely to cause incorrect spacing in 'title'! Consider "
+      message += r'~\unit'
+      message += " instead."
+      raise ValueError(message)
+   clean_entry = entry
 
-#    # things that is wrongly modified by `homogenize_latex_encoding`
-#    clean_entry['title'] = entry['title'].replace("{I}II", "{III}")
-#    clean_entry['title'] = entry['title'].replace("{I}I", "{II}")
-#    clean_entry['title'] = entry['title'].replace("{S}b-", "{Sb}-")
-#    clean_entry['title'] = entry['title'].replace("{I}nAs", "{InAs}")
-#    clean_entry['title'] = entry['title'].replace("{G}aSb", "{GaSb}")
-#    clean_entry['title'] = entry['title'].replace("{A}lSb", "{AlSb}")
-#    clean_entry['title'] = entry['title'].replace("{S}iGe", "{SiGe}")
-#    clean_entry['title'] = entry['title'].replace("{G}aN", "{GaN}")
-#    clean_entry['title'] = entry['title'].replace("{A}lN", "{AlN}")
-#    clean_entry['title'] = entry['title'].replace(r"k\textbackslash ensuremath\cdot p", r"k\ensuremath{\cdot}p")
-#    clean_entry['title'] = entry['title'].replace(r"\textdollar ", r"$")
-#    clean_entry['title'] = entry['title'].replace(r"\textbackslash mathcal{F}_-3/2", r"\mathcal{F}_{-3/2}")
-#    clean_entry['title'] = entry['title'].replace(r"\textdollar ", r"$")
-#    clean_entry['title'] = entry['title'].replace(r"\_", "_")
-#    clean_entry['title'] = entry['title'].replace("{\{A}A}", "{\AA}")
-#    return clean_entry
+   # # things that is wrongly modified by `homogenize_latex_encoding`
+   # clean_entry['title'] = entry['title'].replace("{I}II", "{III}")
+   # clean_entry['title'] = entry['title'].replace("{I}I", "{II}")
+   # clean_entry['title'] = entry['title'].replace("{S}b-", "{Sb}-")
+   # clean_entry['title'] = entry['title'].replace("{I}nAs", "{InAs}")
+   # clean_entry['title'] = entry['title'].replace("{G}aSb", "{GaSb}")
+   # clean_entry['title'] = entry['title'].replace("{A}lSb", "{AlSb}")
+   # clean_entry['title'] = entry['title'].replace("{S}iGe", "{SiGe}")
+   # clean_entry['title'] = entry['title'].replace("{G}aN", "{GaN}")
+   # clean_entry['title'] = entry['title'].replace("{A}lN", "{AlN}")
+   # clean_entry['title'] = entry['title'].replace(r"k\textbackslash ensuremath\cdot p", r"k\ensuremath{\cdot}p")
+   # clean_entry['title'] = entry['title'].replace(r"\textdollar ", r"$")
+   # clean_entry['title'] = entry['title'].replace(r"\textbackslash mathcal{F}_-3/2", r"\mathcal{F}_{-3/2}")
+   # clean_entry['title'] = entry['title'].replace(r"\textdollar ", r"$")
+   # clean_entry['title'] = entry['title'].replace(r"\_", "_")
+   # clean_entry['title'] = entry['title'].replace("{\{A}A}", "{\AA}")
+   return clean_entry
 
 # def clean_publisher(entry):
 #    if 'publisher' not in entry.keys():
