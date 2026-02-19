@@ -53,6 +53,7 @@ def cleanup(database, outfile):
    """
    for i, entry in enumerate(database.entries):
       clean_doi(entry)
+      clean_keywords(entry)
       entry = clean_authors(entry)
       entry = clean_journal_abbreviations(entry)
       entry = clean_proceeding_abbreviations(entry)
@@ -89,6 +90,14 @@ def clean_doi(entry):
             entry['doi'] = entry['url'].replace(domain, '')
             return
    raise KeyError(f"Could not deduce 'doi' from 'url' for the {entry['ENTRYTYPE']} {entry['ID']}!")
+
+
+def clean_keywords(entry):
+   """ Delete 'keywords' because it interferes with bibliography filtering by the biblatex command \printbibliography """
+   if entry['ENTRYTYPE'] not in ['article', 'inproceedings']:
+      return
+   if 'keywords' in entry.keys():
+      del entry['keywords']
       
 
 def clean_authors(entry):
