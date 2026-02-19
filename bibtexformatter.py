@@ -1,11 +1,12 @@
 #!.venv/Scripts/python
 
 import bibtexparser
-from bibtexparser.bparser import BibTexParser
-from bibtexparser.customization import homogenize_latex_encoding
+# from bibtexparser.bparser import BibTexParser
+# from bibtexparser.customization import homogenize_latex_encoding
 import subprocess
 import re
 
+doi_domain_candidates = ['https://doi.org/', 'https://dx.doi.org/', 'http://dx.doi.org/']
 
 def parse(bibfile):
    """
@@ -53,6 +54,7 @@ def cleanup(database, outfile):
    """
    for i, entry in enumerate(database.entries):
       clean_doi(entry)
+      clean_url(entry)
       clean_keywords(entry)
       entry = clean_authors(entry)
       entry = clean_journal_abbreviations(entry)
@@ -76,25 +78,43 @@ def cleanup(database, outfile):
 
 
 ##### clean up methods #########################################
+def need_doi(entry):
+   return entry['ENTRYTYPE'] in ['article', 'inproceedings']
+
+
 def clean_doi(entry):
-   if entry['ENTRYTYPE'] not in ['article', 'inproceedings']:
+   if not need_doi(entry):
       return
-   domain_candidates = ['https://doi.org/', 'https://dx.doi.org/', 'http://dx.doi.org/']
+   doi_domain_candidates = ['https://doi.org/', 'https://dx.doi.org/', 'http://dx.doi.org/']
    if 'doi' in entry.keys():
-      for domain in domain_candidates:
+      for domain in doi_domain_candidates:
          entry['doi'] = entry['doi'].replace(domain, '')
       return
    if 'url' in entry.keys():
-      for domain in domain_candidates:
+      for domain in doi_domain_candidates:
          if domain in entry['url']:
             entry['doi'] = entry['url'].replace(domain, '')
             return
    raise KeyError(f"Could not deduce 'doi' from 'url' for the {entry['ENTRYTYPE']} {entry['ID']}!")
 
 
+def is_doi_url(address):
+   return any([doi_domain in address for doi_domain in doi_domain_candidates])
+
+
+def clean_url(entry):
+   if 'url' in entry.keys() and is_doi_url(entry['url']):
+      return
+   if 'doi' in entry.keys():
+      entry['url'] = doi_domain_candidates[0] + entry['doi']
+      return
+   if need_doi(entry):
+      raise ValueError(f"'url' is missing for the {entry['ENTRYTYPE']} {entry['ID']}!")
+   
+
 def clean_keywords(entry):
    """ Delete 'keywords' because it interferes with bibliography filtering by the biblatex command \printbibliography """
-   if entry['ENTRYTYPE'] not in ['article', 'inproceedings']:
+   if not need_doi(entry):
       return
    if 'keywords' in entry.keys():
       del entry['keywords']
