@@ -138,6 +138,7 @@ def clean_journal_abbreviations(entry):
       raise KeyError(f"The entry {entry['ID']} must contain 'journal'!")
 
    clean_entry = entry
+   clean_entry['journal'] = entry['journal'].replace("Optical Engineering", "Opt. Eng.")
    clean_entry['journal'] = entry['journal'].replace("physics", "Phys.")
    clean_entry['journal'] = entry['journal'].replace("Physics", "Phys.")
    clean_entry['journal'] = entry['journal'].replace("physical", "Phys.")
