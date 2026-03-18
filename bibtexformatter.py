@@ -138,7 +138,9 @@ def clean_journal_abbreviations(entry):
       raise KeyError(f"The entry {entry['ID']} must contain 'journal'!")
 
    clean_entry = entry
-   clean_entry['journal'] = entry['journal'].replace("Optical Engineering", "Opt. Eng.")
+   clean_entry['journal'] = entry['journal'].replace("Engineering", "Eng.")
+   clean_entry['journal'] = entry['journal'].replace("Optical", "Opt.")
+   clean_entry['journal'] = entry['journal'].replace("Optics", "Opt.")
    clean_entry['journal'] = entry['journal'].replace("physics", "Phys.")
    clean_entry['journal'] = entry['journal'].replace("Physics", "Phys.")
    clean_entry['journal'] = entry['journal'].replace("physical", "Phys.")
@@ -153,8 +155,10 @@ def clean_journal_abbreviations(entry):
    clean_entry['journal'] = entry['journal'].replace("Technology", "Tech.")
    clean_entry['journal'] = entry['journal'].replace("nature", "Nat.")
    clean_entry['journal'] = entry['journal'].replace("Nature", "Nat.")
-   clean_entry['journal'] = entry['journal'].replace("communication", "Comm.")
-   clean_entry['journal'] = entry['journal'].replace("Communication", "Comm.")
+   clean_entry['journal'] = entry['journal'].replace("communications", "Commun.")
+   clean_entry['journal'] = entry['journal'].replace("communication", "Commun.")
+   clean_entry['journal'] = entry['journal'].replace("Communications", "Commun.")
+   clean_entry['journal'] = entry['journal'].replace("Communication", "Commun.")
    clean_entry['journal'] = entry['journal'].replace("reviews", "Rev.")
    clean_entry['journal'] = entry['journal'].replace("Reviews", "Rev.")
    clean_entry['journal'] = entry['journal'].replace("review", "Rev.")
