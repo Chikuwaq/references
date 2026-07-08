@@ -18,14 +18,15 @@ in the preamble of your tex file.
 
 ## Active usage: Python formatter
 You can format your own bib file with the `format.py` script. 
-It depends on `bibtexparser` module. We recommend to use it in a virtual Python environment:
+It depends on `bibtexparser` module. As this module has not been actively updated, it has the following dependencies:
+* pip <= 23.0
+We recommend to create a virtual Python environment:
 ```sh
 python -m venv .venv
 ```
 and activate the virtual environment by sourcing the script `<venv>/Scripts/Activate.ps1`.
 If you use pip, install the dependencies as:
 ```sh
-python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 Then run the format script:
@@ -52,10 +53,10 @@ print(locale.getpreferredencoding())
 
 ## Examples where manual adjustment is needed
 1. If an auther's first name is abbreviated as `M.L.`, this will not be recognized as a name with two first name initials. Use the regex
-```
+```sh
 (?<=\.)\w(?=\.)
 ```
-in VS Code to find such cases and amend it to `M. L.`.
+in e.g. VS Code to find such cases and amend it to `M. L.`.
 
 2. Abbreviation of journal names
 Journal --> J.
