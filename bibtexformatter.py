@@ -113,7 +113,7 @@ def clean_url(entry):
    
 
 def clean_keywords(entry):
-   """ Delete 'keywords' because it interferes with bibliography filtering by the biblatex command \printbibliography """
+   """ Delete 'keywords' because it interferes with bibliography filtering by the biblatex command printbibliography """
    if not need_doi(entry):
       return
    if 'keywords' in entry.keys():
